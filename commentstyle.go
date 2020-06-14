@@ -13,6 +13,16 @@ import (
 
 const doc = "commentstyle is linter to check comment style"
 
+var (
+	fPreferLineStyle bool = true
+	fOnlyASCII       bool = true
+)
+
+func init() {
+	Analyzer.Flags.BoolVar(&fPreferLineStyle, "prefer-line-style", true, "enable prefer-line-style style check")
+	Analyzer.Flags.BoolVar(&fOnlyASCII, "only-ascii", true, "enable only-ascii style check")
+}
+
 var Analyzer = &analysis.Analyzer{
 	Name: "commentstyle",
 	Doc:  doc,
@@ -34,8 +44,13 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		case *ast.File:
 			for _, cg := range n.Comments {
 				for _, cmt := range cg.List {
-					checkASCII(pass, cmt)
-					checkLineStyle(pass, cmt)
+					if fOnlyASCII {
+						checkASCII(pass, cmt)
+					}
+
+					if fPreferLineStyle {
+						checkLineStyle(pass, cmt)
+					}
 				}
 			}
 		}
@@ -63,7 +78,7 @@ func isASCII(s string) (rune, bool) {
 
 func checkLineStyle(pass *analysis.Pass, cmt *ast.Comment) {
 	if isBlock := isBlockStyle(cmt.Text); isBlock {
-		pass.Reportf(cmt.Pos(), "[prefer-linestyle] should use //-style")
+		pass.Reportf(cmt.Pos(), "[prefer-line-style] should use //-style")
 	}
 }
 
