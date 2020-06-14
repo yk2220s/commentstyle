@@ -44,7 +44,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 func checkASCII(pass *analysis.Pass, cmt *ast.Comment) {
 	if r, ascii := isASCII(cmt.Text); !ascii {
-		pass.Reportf(cmt.Pos(), "%#U is non-ASCII character", r)
+		pass.Reportf(cmt.Pos(), "[only-ascii] %#U is non-ASCII character", r)
 	}
 }
 
