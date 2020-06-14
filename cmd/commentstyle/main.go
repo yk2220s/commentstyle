@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/yk2220s/commentstyle"
-	"golang.org/x/tools/go/analysis/unitchecker"
+	"golang.org/x/tools/go/analysis/singlechecker"
 )
 
-func main() { unitchecker.Main(commentstyle.Analyzer) }
+func main() { singlechecker.Main(commentstyle.Analyzer) }
