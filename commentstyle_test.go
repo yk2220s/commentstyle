@@ -7,8 +7,10 @@ import (
 	"golang.org/x/tools/go/analysis/analysistest"
 )
 
-// TestAnalyzer is a test for Analyzer.
-func TestAnalyzer(t *testing.T) {
-	testdata := analysistest.TestData()
-	analysistest.Run(t, testdata, commentstyle.Analyzer, "a")
+func TestCheckASCII(t *testing.T) {
+	analysistest.Run(t, analysistest.TestData(), commentstyle.Analyzer, "ascii")
+}
+
+func TestCheckLineStyle(t *testing.T) {
+	analysistest.Run(t, analysistest.TestData(), commentstyle.Analyzer, "linestyle")
 }
