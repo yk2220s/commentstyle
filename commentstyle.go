@@ -3,6 +3,7 @@ package commentstyle
 
 import (
 	"go/ast"
+	"strings"
 	"unicode"
 
 	"golang.org/x/tools/go/analysis"
@@ -34,6 +35,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			for _, cg := range n.Comments {
 				for _, cmt := range cg.List {
 					checkASCII(pass, cmt)
+					checkLineStyle(pass, cmt)
 				}
 			}
 		}
@@ -43,7 +45,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 }
 
 func checkASCII(pass *analysis.Pass, cmt *ast.Comment) {
-	if r, ascii := isASCII(cmt.Text); !ascii {
+	if r, isASCII := isASCII(cmt.Text); !isASCII {
 		pass.Reportf(cmt.Pos(), "[only-ascii] %#U is non-ASCII character", r)
 	}
 }
@@ -57,4 +59,14 @@ func isASCII(s string) (rune, bool) {
 	}
 
 	return 0, true
+}
+
+func checkLineStyle(pass *analysis.Pass, cmt *ast.Comment) {
+	if isBlock := isBlockStyle(cmt.Text); isBlock {
+		pass.Reportf(cmt.Pos(), "[prefer-linestyle] should use //-style")
+	}
+}
+
+func isBlockStyle(s string) bool {
+	return strings.HasPrefix(s, "/*")
 }
