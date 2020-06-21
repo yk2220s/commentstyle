@@ -14,8 +14,8 @@ import (
 const doc = "commentstyle is linter to check comment style"
 
 var (
-	fPreferLineStyle bool = true
-	fOnlyASCII       bool = true
+	fPreferLineStyle bool
+	fOnlyASCII       bool
 )
 
 func init() {
